@@ -3,178 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Institution Portal | Dynamic & Responsive</title>
+    <title>Secure Institution Portal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     
     <style>
-        /* --- DESIGN SYSTEM --- */
         :root {
-            --bg-color: #f8f9fa;
+            --bg-color: #f8fafd;
             --card-bg: #ffffff;
-            --text-main: #2d3436;
-            --text-dim: #636e72;
-            --accent: #0984e3;
-            --border: #edf2f7;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --text-main: #1a1c1e;
+            --text-dim: #5f6368;
+            --accent: #1a73e8;
+            --border: #dadce0;
+            --transition: all 0.3s ease;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-color); color: var(--text-main); }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            line-height: 1.6;
-        }
-
-        /* --- NAVIGATION --- */
+        /* Navigation */
         nav {
-            position: fixed;
-            top: 0; width: 100%;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(12px);
-            z-index: 1000;
-            border-bottom: 1px solid var(--border);
-            padding: 1rem 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            position: fixed; top: 0; width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000; border-bottom: 1px solid var(--border);
+            padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center;
         }
-
-        .logo { font-weight: 600; font-size: 1.1rem; letter-spacing: -0.5px; cursor: pointer; color: var(--accent); }
+        .logo { font-weight: 600; color: var(--accent); cursor: pointer; font-size: 1.1rem; }
         .nav-links { display: flex; gap: 1.5rem; list-style: none; }
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text-dim);
-            font-size: 0.85rem;
-            font-weight: 600;
-            transition: var(--transition);
-        }
-        .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+        .nav-links a { text-decoration: none; color: var(--text-dim); font-size: 0.9rem; font-weight: 500; transition: var(--transition); }
+        .nav-links a.active { color: var(--accent); }
 
-        /* --- LAYOUT --- */
-        main { margin-top: 80px; padding: 2rem 5%; min-height: 80vh; }
-        .container { max-width: 1200px; margin: 0 auto; opacity: 0; transform: translateY(15px); transition: var(--transition); }
+        /* Layout */
+        main { margin-top: 80px; padding: 2rem 5%; }
+        .container { max-width: 1200px; margin: 0 auto; opacity: 0; transform: translateY(10px); transition: var(--transition); }
         .container.visible { opacity: 1; transform: translateY(0); }
 
-        /* --- SEARCH BAR --- */
-        .search-container { margin-bottom: 2rem; max-width: 400px; margin-left: auto; margin-right: auto; }
+        .hero { text-align: center; padding: 2rem 0; }
+        .hero h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+
+        /* Search */
+        .search-container { margin: 0 auto 2rem; max-width: 500px; }
         .search-input {
-            width: 100%;
-            padding: 0.8rem 1.2rem;
-            border-radius: 50px;
-            border: 1px solid var(--border);
-            background: white;
-            font-family: inherit;
-            font-size: 0.9rem;
-            outline: none;
-            transition: var(--transition);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            width: 100%; padding: 0.8rem 1.5rem; border-radius: 8px;
+            border: 1px solid var(--border); font-size: 1rem; outline: none;
         }
-        .search-input:focus { border-color: var(--accent); box-shadow: 0 4px 12px rgba(9, 132, 227, 0.1); }
+        .search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(26,115,232,0.1); }
 
-        /* --- HERO SECTION --- */
-        .hero { padding: 3rem 0; text-align: center; }
-        .hero h1 { font-size: 2.5rem; margin-bottom: 0.5rem; font-weight: 600; letter-spacing: -1px; }
-        .hero p { color: var(--text-dim); font-size: 1rem; }
+        /* Table Style */
+        .table-container { background: white; border-radius: 12px; border: 1px solid var(--border); overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        th { background: #f1f3f4; padding: 1rem; text-align: left; font-size: 0.8rem; color: var(--text-dim); text-transform: uppercase; }
+        td { padding: 1rem; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
 
-        /* --- CARD LAYOUT --- */
-        .data-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 1.5rem;
-            transition: var(--transition);
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-        }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.05); border-color: #d1d8e0; }
-        .card-item { border-bottom: 1px solid #f9f9f9; padding-bottom: 0.5rem; }
-        .card-item:last-child { border: none; }
-        .card-label { font-size: 0.65rem; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 2px; }
-        .card-value { font-size: 0.95rem; color: var(--text-main); font-weight: 400; }
+        /* Card Style */
+        .data-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+        .card { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; transition: var(--transition); }
+        .card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+        .card-label { font-size: 0.7rem; color: var(--accent); font-weight: 600; text-transform: uppercase; margin-top: 0.8rem; }
+        .card-value { font-size: 1rem; margin-bottom: 0.5rem; border-bottom: 1px solid #f8f9fa; padding-bottom: 0.3rem; }
 
-        /* --- TABLE LAYOUT --- */
-        .table-container { width: 100%; overflow-x: auto; background: white; border-radius: 12px; border: 1px solid var(--border); }
-        table { width: 100%; border-collapse: collapse; text-align: left; min-width: 600px; }
-        th { background: #fafafa; padding: 1rem; font-size: 0.75rem; text-transform: uppercase; color: var(--text-dim); border-bottom: 1px solid var(--border); }
-        td { padding: 1rem; border-bottom: 1px solid var(--border); font-size: 0.9rem; color: var(--text-main); }
-        tr:last-child td { border-bottom: none; }
-
-        /* --- UTILITIES --- */
-        .loader { display: none; text-align: center; padding: 5rem; color: var(--accent); font-weight: 600; letter-spacing: 1px; }
-        .error-msg { color: #e74c3c; padding: 2rem; background: #fff5f5; border-radius: 12px; text-align: center; border: 1px solid #feb2b2; }
+        /* Utilities */
+        .loader { display: none; text-align: center; padding: 4rem; color: var(--accent); font-weight: 600; }
         .hidden { display: none !important; }
-
-        @media (max-width: 768px) {
-            .nav-links { gap: 0.8rem; }
-            .nav-links a { font-size: 0.75rem; }
-            .hero h1 { font-size: 1.8rem; }
-        }
+        @media (max-width: 768px) { .nav-links { display: none; } }
     </style>
 </head>
 <body>
 
     <nav>
-        <div class="logo" onclick="window.location.hash = 'home'">PORTAL.SYS</div>
+        <div class="logo" onclick="window.location.hash = 'home'">INSTITUTION PORTAL</div>
         <ul class="nav-links" id="main-nav"></ul>
     </nav>
 
     <main id="app">
-        <div id="loader" class="loader">SYNCING DATA...</div>
+        <div id="loader" class="loader">Loading Secure Data...</div>
         <div id="content-area"></div>
     </main>
 
     <script>
         /**
-         * ==========================================
-         * ⚙️ CONFIGURATION SECTION
-         * ==========================================
+         * ⚙️ CONFIGURATION
          */
         const SITE_CONFIG = {
-            sheetId: '1wgPQaYPCncNyyJnW-fu_nygIF-ZaoKBM5FQxALI8bF8', 
+            // REPLACE THIS with your Apps Script Web App URL
+            scriptURL: 'https://script.google.com/macros/s/AKfycbwh-UZ7DVJIJlfwsj89LDjglYe7HX-f8O0CNS4CgyureRn-PvWehLpxAk6e0a3ub4P1/exec',
             pages: [
-                { 
-                    id: 'home', 
-                    title: 'Home', 
-                    type: 'static', 
-                    content: '<div class="hero"><h1>Digital Institution Portal</h1><p>Secure access to central databases and documentation.</p></div>' 
-                },
-                { 
-                    id: 'master', 
-                    title: 'Master', 
-                    type: 'dynamic', 
-                    layout: 'table', // Options: 'table' or 'card'
-                    gid: '1430286757' 
-                },
-                { 
-                    id: 'society', 
-                    title: 'Society', 
-                    type: 'dynamic', 
-                    layout: 'card', 
-                    gid: '85431680' 
-                },
-                { 
-                    id: 'documents', 
-                    title: 'Docs', 
-                    type: 'dynamic', 
-                    layout: 'card', 
-                    gid: '885792851' 
-                }
+                { id: 'home', title: 'Home', type: 'static', content: '<div class="hero"><h1>Welcome to the Dashboard</h1><p>Select a category from the menu to view data.</p></div>' },
+                { id: 'master', title: 'Master Data', type: 'dynamic', layout: 'table', gid: '1430286757' },
+                { id: 'society', title: 'Society', type: 'dynamic', layout: 'card', gid: '85431680' },
+                { id: 'documents', title: 'CBSE Docs', type: 'dynamic', layout: 'card', gid: '885792851' }
             ]
         };
 
         const appArea = document.getElementById('content-area');
         const navBar = document.getElementById('main-nav');
-        const loadSpinner = document.getElementById('loader');
+        const loader = document.getElementById('loader');
 
         function init() {
             renderNav();
@@ -191,12 +116,10 @@
         async function router() {
             const hash = window.location.hash.replace('#', '') || 'home';
             const page = SITE_CONFIG.pages.find(p => p.id === hash);
-            
             appArea.innerHTML = '';
             document.querySelectorAll('.nav-links a').forEach(a => a.classList.toggle('active', a.dataset.page === hash));
 
             if (!page) return;
-
             if (page.type === 'static') {
                 renderContent(page.content);
             } else {
@@ -205,24 +128,15 @@
         }
 
         async function fetchAndRenderData(page) {
-            loadSpinner.style.display = 'block';
-            
-            const url = `https://docs.google.com/spreadsheets/d/${SITE_CONFIG.sheetId}/gviz/tq?tqx=out:json&gid=${page.gid}`;
-
+            loader.style.display = 'block';
             try {
-                const response = await fetch(url);
-                const text = await response.text();
-                const jsonText = text.match(/google\.visualization\.Query\.setResponse\(([\s\S\w]+)\)/);
-                
-                if (!jsonText) throw new Error("Format mismatch from Google Sheets");
-                
-                const json = JSON.parse(jsonText[1]);
-                const rows = json.table.rows;
-                const cols = json.table.cols;
+                const response = await fetch(`${SITE_CONFIG.scriptURL}?gid=${page.gid}`);
+                const data = await response.json();
+                if (!data || data.length === 0) throw new Error("No data found");
 
-                // Build Page Structure
+                const headers = Object.keys(data[0]);
                 let html = `
-                    <div class="hero"><h1>${page.title}</h1><p>Real-time data from spreadsheet</p></div>
+                    <div class="hero"><h1>${page.title}</h1></div>
                     <div class="search-container">
                         <input type="text" class="search-input" id="data-search" placeholder="Search ${page.title}..." onkeyup="filterData()">
                     </div>
@@ -230,49 +144,41 @@
 
                 if (page.layout === 'card') {
                     html += `<div class="data-grid" id="searchable-body">`;
-                    rows.forEach(row => {
+                    data.forEach(row => {
                         html += `<div class="card search-item">`;
-                        row.c.forEach((cell, i) => {
-                            html += `
-                                <div class="card-item">
-                                    <div class="card-label">${cols[i].label || 'Field'}</div>
-                                    <div class="card-value">${cell ? cell.v : '—'}</div>
-                                </div>`;
+                        headers.forEach(h => {
+                            html += `<div class="card-label">${h}</div><div class="card-value">${row[h] || '—'}</div>`;
                         });
                         html += `</div>`;
                     });
                     html += `</div>`;
                 } else {
                     html += `
-                    <div class="table-container">
-                        <table>
-                            <thead><tr>${cols.map(c => `<th>${c.label || ''}</th>`).join('')}</tr></thead>
-                            <tbody id="searchable-body">
-                                ${rows.map(row => `
-                                    <tr class="search-item">
-                                        ${row.c.map(cell => `<td>${cell ? cell.v : ''}</td>`).join('')}
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    </div>`;
+                        <div class="table-container">
+                            <table>
+                                <thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead>
+                                <tbody id="searchable-body">
+                                    ${data.map(row => `
+                                        <tr class="search-item">
+                                            ${headers.map(h => `<td>${row[h] || ''}</td>`).join('')}
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>`;
                 }
-
                 renderContent(html);
             } catch (err) {
-                renderContent(`<div class="error-msg"><strong>Sync Error:</strong> ${err.message}<br>Please ensure the sheet is "Public" and IDs are correct.</div>`);
+                renderContent(`<div class="hero"><p style="color:red">Error: ${err.message}. Check Apps Script Deployment.</p></div>`);
             } finally {
-                loadSpinner.style.display = 'none';
+                loader.style.display = 'none';
             }
         }
 
         function filterData() {
-            const query = document.getElementById('data-search').value.toLowerCase();
-            const items = document.querySelectorAll('.search-item');
-            
-            items.forEach(item => {
-                const text = item.innerText.toLowerCase();
-                item.classList.toggle('hidden', !text.includes(query));
+            const val = document.getElementById('data-search').value.toLowerCase();
+            document.querySelectorAll('.search-item').forEach(item => {
+                item.classList.toggle('hidden', !item.innerText.toLowerCase().includes(val));
             });
         }
 
