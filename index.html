@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multi-Sheet Institution Portal</title>
+    <title>Institution Portal | Secure Access</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -40,6 +40,19 @@
 
         .hero { text-align: center; padding: 2rem 0; }
         .hero h1 { font-size: 2.2rem; margin-bottom: 0.5rem; font-weight: 600; letter-spacing: -1px; }
+        
+        /* New Timestamp Style */
+        .update-badge {
+            display: inline-block;
+            background: #eef3f8;
+            color: var(--text-dim);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+        }
 
         .controls-row {
             display: flex; gap: 12px; margin: 0 auto 2.5rem;
@@ -94,51 +107,19 @@
     </main>
 
     <script>
-        /**
-         * ⚙️ CONFIGURATION
-         * You can now add multiple DIFFERENT spreadsheet IDs here.
-         */
         const SITE_CONFIG = {
-            // Replace with your NEWLY DEPLOYED Apps Script URL
-            scriptURL: 'https://script.google.com/macros/s/AKfycbxCPfZsmS5dqFk2Syb41mKJquRDiFe8Uf530aEBJE473FLxXJ0lXpUmRBGy-4KUo_Uprw/exec',
+            scriptURL: 'https://script.google.com/macros/s/AKfycbzmnml78jjXyfGGX-AY-y9izF0suh6znl4NdNrI9QagV4lX-4XuU4Z7Uj9_7yWwuGArTw/exec',
             pages: [
-                { id: 'home', title: 'Home', type: 'static', content: '<div class="hero"><h1>Institution Portal</h1><p>Select a category to access data from different spreadsheets.</p></div>' },
-                { 
-                    id: 'master', 
-                    title: 'Master', 
-                    type: 'dynamic', 
-                    layout: 'table', 
-                    sheetId: '1wgPQaYPCncNyyJnW-fu_nygIF-ZaoKBM5FQxALI8bF8', // 1st Spreadsheet
-                    gid: '1430286757' 
-                },
-                { 
-                    id: 'society', 
-                    title: 'Society', 
-                    type: 'dynamic', 
-                    layout: 'card', 
-                    sheetId: '1wgPQaYPCncNyyJnW-fu_nygIF-ZaoKBM5FQxALI8bF8', // 1st Spreadsheet
-                    gid: '85431680' 
-                },
-                { 
-                    id: 'CBSE&ZONEdocuments', 
-                    title: 'CBSE & ZONE Documents', 
-                    type: 'dynamic', 
-                    layout: 'card', 
-                    sheetId: '1wgPQaYPCncNyyJnW-fu_nygIF-ZaoKBM5FQxALI8bF8', // 1st Spreadsheet
-                    gid: '885792851' 
-                },
-                { 
-                    id: 'smcCBSE&ZONEdocuments', 
-                    title: 'SMC', 
-                    type: 'dynamic', 
-                    layout: 'card', 
-                    sheetId: '1wrcR-9KSQl4WeiAzwBvNwDMqR4HNhOIZyZGjociO3iQ', // 2nd Spreadsheet
-                    gid: '1277771410' 
-                }
+                { id: 'home', title: 'Home', type: 'static', content: '<div class="hero"><h1>Institution Portal</h1><p>Select a category to access data.</p></div>' },
+                { id: 'master', title: 'Master', type: 'dynamic', layout: 'table', sheetId: '1wgPQaYPCncNyyJnW-fu_nygIF-ZaoKBM5FQxALI8bF8', gid: '1430286757' },
+                { id: 'society', title: 'Society', type: 'dynamic', layout: 'card', sheetId: '1wgPQaYPCncNyyJnW-fu_nygIF-ZaoKBM5FQxALI8bF8', gid: '85431680' },
+                { id: 'CBSE&ZONEdocuments', title: 'CBSE & ZONE Documents', type: 'dynamic', layout: 'card', sheetId: '1wgPQaYPCncNyyJnW-fu_nygIF-ZaoKBM5FQxALI8bF8', gid: '885792851' },
+                { id: 'smc', title: 'SMC', type: 'dynamic', layout: 'card', sheetId: '1wrcR-9KSQl4WeiAzwBvNwDMqR4HNhOIZyZGjociO3iQ', gid: '1277771410' }
             ]
         };
 
         let currentData = [];
+        let lastUpdatedStr = "";
         let sortKey = "";
         let ascending = true;
 
@@ -175,17 +156,18 @@
         async function fetchAndRenderData(page) {
             loader.style.display = 'block';
             try {
-                // Now passing both "id" (Spreadsheet ID) and "gid" (Tab ID)
                 const response = await fetch(`${SITE_CONFIG.scriptURL}?id=${page.sheetId}&gid=${page.gid}`);
-                currentData = await response.json();
+                const result = await response.json();
                 
-                if (currentData.error) throw new Error(currentData.error);
-                if (!currentData.length) throw new Error("No data found");
+                if (result.error) throw new Error(result.error);
                 
+                currentData = result.rows;
+                lastUpdatedStr = result.lastUpdated; // Store the timestamp
                 sortKey = Object.keys(currentData[0])[0];
+                
                 renderUI(page);
             } catch (err) {
-                renderContent(`<div class="hero"><p style="color:red">Error: ${err.message}. Ensure the sheet is accessible by the Script owner.</p></div>`);
+                renderContent(`<div class="hero"><p style="color:red">Error: ${err.message}</p></div>`);
             } finally {
                 loader.style.display = 'none';
             }
@@ -202,7 +184,10 @@
             });
 
             let html = `
-                <div class="hero"><h1>${page.title}</h1></div>
+                <div class="hero">
+                    <span class="update-badge">📅 Last Modified: ${lastUpdatedStr}</span>
+                    <h1>${page.title}</h1>
+                </div>
                 <div class="controls-row">
                     <input type="text" class="search-input" id="data-search" placeholder="Search..." onkeyup="filterData()">
                     <div class="sort-container">
@@ -246,5 +231,3 @@
     </script>
 </body>
 </html>
-
-
