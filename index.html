@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Institution Portal | Secure Access</title>
+    <title>Multi-Sheet Institution Portal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -22,7 +22,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: var(--bg-color); color: var(--text-main); line-height: 1.5; }
 
-        /* --- Navigation --- */
         nav {
             position: fixed; top: 0; width: 100%;
             background: rgba(255, 255, 255, 0.9);
@@ -30,108 +29,127 @@
             z-index: 1000; border-bottom: 1px solid var(--border);
             padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center;
         }
-        .logo { font-weight: 600; color: var(--accent); cursor: pointer; font-size: 1.1rem; letter-spacing: -0.5px; }
+        .logo { font-weight: 600; color: var(--accent); cursor: pointer; font-size: 1.1rem; }
         .nav-links { display: flex; gap: 1.5rem; list-style: none; }
         .nav-links a { text-decoration: none; color: var(--text-dim); font-size: 0.9rem; font-weight: 500; transition: var(--transition); }
-        .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+        .nav-links a.active { color: var(--accent); }
 
-        /* --- Layout --- */
         main { margin-top: 80px; padding: 2rem 5%; min-height: 90vh; }
         .container { max-width: 1200px; margin: 0 auto; opacity: 0; transform: translateY(15px); transition: var(--transition); }
         .container.visible { opacity: 1; transform: translateY(0); }
 
-        .hero { text-align: center; padding: 3rem 0; }
-        .hero h1 { font-size: 2.5rem; margin-bottom: 0.5rem; font-weight: 600; letter-spacing: -1px; }
-        .hero p { color: var(--text-dim); }
+        .hero { text-align: center; padding: 2rem 0; }
+        .hero h1 { font-size: 2.2rem; margin-bottom: 0.5rem; font-weight: 600; letter-spacing: -1px; }
 
-        /* --- Search Bar --- */
-        .search-container { margin: 0 auto 2.5rem; max-width: 500px; position: sticky; top: 90px; z-index: 10; }
-        .search-input {
-            width: 100%; padding: 0.9rem 1.5rem; border-radius: 50px;
-            border: 1px solid var(--border); font-size: 1rem; outline: none;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05); transition: var(--transition);
+        .controls-row {
+            display: flex; gap: 12px; margin: 0 auto 2.5rem;
+            max-width: 900px; flex-wrap: wrap; justify-content: center;
+            align-items: center;
         }
-        .search-input:focus { border-color: var(--accent); box-shadow: 0 4px 20px rgba(26, 115, 232, 0.15); }
+        .search-input {
+            flex: 1; min-width: 280px; padding: 0.8rem 1.5rem; border-radius: 50px;
+            border: 1px solid var(--border); font-size: 1rem; outline: none;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+        }
+        .sort-container {
+            display: flex; align-items: center; background: white;
+            padding: 6px 18px; border-radius: 50px; border: 1px solid var(--border);
+            gap: 10px;
+        }
+        .sort-select { border: none; outline: none; font-size: 0.85rem; color: var(--text-main); font-weight: 600; cursor: pointer; }
+        .sort-btn { background: none; border: none; cursor: pointer; font-size: 1.2rem; color: var(--accent); }
 
-        /* --- Card Styles --- */
         .data-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
-        .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; transition: var(--transition); display: flex; flex-direction: column; }
+        .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; transition: var(--transition); }
         .card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.08); }
-        .card-label { font-size: 0.7rem; color: var(--accent); font-weight: 600; text-transform: uppercase; margin-top: 1rem; margin-bottom: 2px; letter-spacing: 0.5px; }
+        .card-label { font-size: 0.65rem; color: var(--accent); font-weight: 600; text-transform: uppercase; margin-top: 1rem; }
         .card-value { font-size: 0.95rem; color: var(--text-main); word-break: break-word; }
 
-        /* --- Table Styles --- */
-        .table-container { background: white; border-radius: 12px; border: 1px solid var(--border); overflow-x: auto; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        .table-container { background: white; border-radius: 12px; border: 1px solid var(--border); overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; min-width: 700px; text-align: left; }
         th { background: #f8f9fa; padding: 1rem; font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; border-bottom: 2px solid var(--border); }
         td { padding: 1rem; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
-        tr:hover td { background-color: #fdfdfd; }
 
-        /* --- Dynamic Link Button --- */
         .doc-link {
-            display: inline-block; margin-top: 8px; padding: 8px 16px;
+            display: inline-block; margin-top: 10px; padding: 10px 20px;
             background-color: #e8f0fe; color: #1a73e8; text-decoration: none;
-            border-radius: 8px; font-size: 0.85rem; font-weight: 600; transition: var(--transition);
-            text-align: center; border: 1px solid transparent;
+            border-radius: 10px; font-size: 0.85rem; font-weight: 600;
         }
-        .doc-link:hover { background-color: #1a73e8; color: white; transform: scale(1.02); }
+        .doc-link:hover { background-color: #1a73e8; color: white; }
 
-        /* --- UI States --- */
-        .loader { display: none; text-align: center; padding: 5rem; color: var(--accent); font-weight: 600; letter-spacing: 1px; }
+        .loader { display: none; text-align: center; padding: 5rem; color: var(--accent); font-weight: 600; }
         .hidden { display: none !important; }
-        .error-msg { color: #d93025; padding: 2rem; background: #fce8e6; border-radius: 12px; text-align: center; margin: 2rem 0; }
-
-        @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .hero h1 { font-size: 1.8rem; }
-        }
     </style>
 </head>
 <body>
 
     <nav>
-        <div class="logo" onclick="window.location.hash = 'home'">INSTITUTION PORTAL</div>
+        <div class="logo" onclick="window.location.hash = 'home'">PORTAL SYSTEM</div>
         <ul class="nav-links" id="main-nav"></ul>
     </nav>
 
     <main id="app">
-        <div id="loader" class="loader">SYNCING SECURE DATABASE...</div>
+        <div id="loader" class="loader">FETCHING DATA...</div>
         <div id="content-area"></div>
     </main>
 
     <script>
         /**
-         * ⚙️ SITE CONFIGURATION
+         * ⚙️ CONFIGURATION
+         * You can now add multiple DIFFERENT spreadsheet IDs here.
          */
         const SITE_CONFIG = {
-            // Your provided Apps Script URL
+            // Replace with your NEWLY DEPLOYED Apps Script URL
             scriptURL: 'https://script.google.com/macros/s/AKfycbwh-UZ7DVJIJlfwsj89LDjglYe7HX-f8O0CNS4CgyureRn-PvWehLpxAk6e0a3ub4P1/exec',
             pages: [
-                { id: 'home', title: 'Home', type: 'static', content: '<div class="hero"><h1>Welcome</h1><p>Please select a category from the navigation menu above.</p></div>' },
-                { id: 'master', title: 'Master', type: 'dynamic', layout: 'table', gid: '1430286757' },
-                { id: 'society', title: 'Society', type: 'dynamic', layout: 'card', gid: '85431680' },
-                { id: 'CBSE&ZONEdocuments', title: 'CBSE & ZONE Documents', type: 'dynamic', layout: 'card', gid: '885792851' }
-            ]
-            scriptURL: 'https://script.google.com/macros/s/AKfycbzxgLKCR4qa2PHJcxRcsH95mTc1tvsNguQ06apxlHY1CAUAJCDtrVYhNLuB7UPtJrCf/exec',
-            pages: [
-                { id: 'smc', title: 'SMC', type: 'dynamic', layout: 'table', gid: '1277771410' }
+                { id: 'home', title: 'Home', type: 'static', content: '<div class="hero"><h1>Institution Portal</h1><p>Select a category to access data from different spreadsheets.</p></div>' },
+                { 
+                    id: 'master', 
+                    title: 'Master', 
+                    type: 'dynamic', 
+                    layout: 'table', 
+                    sheetId: '1wgPQaYPCncNyyJnW-fu_nygIF-ZaoKBM5FQxALI8bF8', // 1st Spreadsheet
+                    gid: '1430286757' 
+                },
+                { 
+                    id: 'society', 
+                    title: 'Society', 
+                    type: 'dynamic', 
+                    layout: 'card', 
+                    sheetId: '1wgPQaYPCncNyyJnW-fu_nygIF-ZaoKBM5FQxALI8bF8', // 1st Spreadsheet
+                    gid: '85431680' 
+                },
+                { 
+                    id: 'CBSE&ZONEdocuments', 
+                    title: 'CBSE & ZONE Documents', 
+                    type: 'dynamic', 
+                    layout: 'card', 
+                    sheetId: '1wgPQaYPCncNyyJnW-fu_nygIF-ZaoKBM5FQxALI8bF8', // 1st Spreadsheet
+                    gid: '885792851' 
+                },
+                { 
+                    id: 'smcCBSE&ZONEdocuments', 
+                    title: 'SMC', 
+                    type: 'dynamic', 
+                    layout: 'card', 
+                    sheetId: 'AKfycbzxgLKCR4qa2PHJcxRcsH95mTc1tvsNguQ06apxlHY1CAUAJCDtrVYhNLuB7UPtJrCf', // 2nd Spreadsheet
+                    gid: '1277771410' 
+                }
             ]
         };
+
+        let currentData = [];
+        let sortKey = "";
+        let ascending = true;
 
         const appArea = document.getElementById('content-area');
         const navBar = document.getElementById('main-nav');
         const loader = document.getElementById('loader');
 
-        /**
-         * HELPER: Formats data. 
-         * If the text starts with http, it creates a "View Document" button.
-         */
         function formatCell(val) {
             if (!val) return '—';
             const str = String(val).trim();
-            if (str.startsWith('http')) {
-                return `<a href="${str}" target="_blank" class="doc-link">View Document</a>`;
-            }
+            if (str.startsWith('http')) return `<a href="${str}" target="_blank" class="doc-link">View Document</a>`;
             return str;
         }
 
@@ -142,85 +160,83 @@
         }
 
         function renderNav() {
-            navBar.innerHTML = SITE_CONFIG.pages.map(p => 
-                `<li><a href="#${p.id}" data-page="${p.id}">${p.title}</a></li>`
-            ).join('');
+            navBar.innerHTML = SITE_CONFIG.pages.map(p => `<li><a href="#${p.id}" data-page="${p.id}">${p.title}</a></li>`).join('');
         }
 
         async function router() {
             const hash = window.location.hash.replace('#', '') || 'home';
             const page = SITE_CONFIG.pages.find(p => p.id === hash);
-            
             appArea.innerHTML = '';
             document.querySelectorAll('.nav-links a').forEach(a => a.classList.toggle('active', a.dataset.page === hash));
-
             if (!page) return;
-
-            if (page.type === 'static') {
-                renderContent(page.content);
-            } else {
-                fetchAndRenderData(page);
-            }
+            page.type === 'static' ? renderContent(page.content) : fetchAndRenderData(page);
         }
 
         async function fetchAndRenderData(page) {
             loader.style.display = 'block';
             try {
-                const response = await fetch(`${SITE_CONFIG.scriptURL}?gid=${page.gid}`);
-                const data = await response.json();
+                // Now passing both "id" (Spreadsheet ID) and "gid" (Tab ID)
+                const response = await fetch(`${SITE_CONFIG.scriptURL}?id=${page.sheetId}&gid=${page.gid}`);
+                currentData = await response.json();
                 
-                if (!data || data.length === 0) throw new Error("No data found in this section.");
-
-                const headers = Object.keys(data[0]);
-                let html = `
-                    <div class="hero"><h1>${page.title}</h1><p>Securely fetched from private cloud storage</p></div>
-                    <div class="search-container">
-                        <input type="text" class="search-input" id="data-search" placeholder="Search ${page.title}..." onkeyup="filterData()">
-                    </div>
-                `;
-
-                if (page.layout === 'card') {
-                    html += `<div class="data-grid" id="searchable-body">`;
-                    data.forEach(row => {
-                        html += `<div class="card search-item">`;
-                        headers.forEach(h => {
-                            html += `<div class="card-label">${h}</div><div class="card-value">${formatCell(row[h])}</div>`;
-                        });
-                        html += `</div>`;
-                    });
-                    html += `</div>`;
-                } else {
-                    html += `
-                        <div class="table-container">
-                            <table>
-                                <thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead>
-                                <tbody id="searchable-body">
-                                    ${data.map(row => `
-                                        <tr class="search-item">
-                                            ${headers.map(h => `<td>${formatCell(row[h])}</td>`).join('')}
-                                        </tr>
-                                    `).join('')}
-                                </tbody>
-                            </table>
-                        </div>`;
-                }
-
-                renderContent(html);
+                if (currentData.error) throw new Error(currentData.error);
+                if (!currentData.length) throw new Error("No data found");
+                
+                sortKey = Object.keys(currentData[0])[0];
+                renderUI(page);
             } catch (err) {
-                renderContent(`<div class="error-msg"><strong>Sync Failed:</strong> ${err.message}<br>Check your Apps Script deployment or Sheet GID.</div>`);
+                renderContent(`<div class="hero"><p style="color:red">Error: ${err.message}. Ensure the sheet is accessible by the Script owner.</p></div>`);
             } finally {
                 loader.style.display = 'none';
             }
         }
 
-        function filterData() {
-            const query = document.getElementById('data-search').value.toLowerCase();
-            document.querySelectorAll('.search-item').forEach(item => {
-                const text = item.innerText.toLowerCase();
-                item.classList.toggle('hidden', !text.includes(query));
+        function renderUI(page) {
+            const headers = Object.keys(currentData[0]);
+            currentData.sort((a, b) => {
+                let vA = String(a[sortKey] || '').toLowerCase();
+                let vB = String(b[sortKey] || '').toLowerCase();
+                if (vA < vB) return ascending ? -1 : 1;
+                if (vA > vB) return ascending ? 1 : -1;
+                return 0;
             });
+
+            let html = `
+                <div class="hero"><h1>${page.title}</h1></div>
+                <div class="controls-row">
+                    <input type="text" class="search-input" id="data-search" placeholder="Search..." onkeyup="filterData()">
+                    <div class="sort-container">
+                        <span style="font-size:0.6rem; color:var(--text-dim)">SORT:</span>
+                        <select class="sort-select" onchange="updateSort(this.value, '${page.id}')">
+                            ${headers.map(h => `<option value="${h}" ${h === sortKey ? 'selected' : ''}>${h}</option>`).join('')}
+                        </select>
+                        <button class="sort-btn" onclick="toggleDir('${page.id}')">${ascending ? '↑' : '↓'}</button>
+                    </div>
+                </div>
+            `;
+
+            if (page.layout === 'card') {
+                html += `<div class="data-grid" id="searchable-body">`;
+                currentData.forEach(row => {
+                    html += `<div class="card search-item">`;
+                    headers.forEach(h => { html += `<div class="card-label">${h}</div><div class="card-value">${formatCell(row[h])}</div>`; });
+                    html += `</div>`;
+                });
+                html += `</div>`;
+            } else {
+                html += `<div class="table-container"><table><thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody id="searchable-body">
+                    ${currentData.map(row => `<tr class="search-item">${headers.map(h => `<td>${formatCell(row[h])}</td>`).join('')}</tr>`).join('')}
+                </tbody></table></div>`;
+            }
+            renderContent(html);
         }
 
+        function updateSort(key, id) { sortKey = key; renderUI(SITE_CONFIG.pages.find(p => p.id === id)); }
+        function toggleDir(id) { ascending = !ascending; renderUI(SITE_CONFIG.pages.find(p => p.id === id)); }
+        function filterData() {
+            const q = document.getElementById('data-search').value.toLowerCase();
+            document.querySelectorAll('.search-item').forEach(el => el.classList.toggle('hidden', !el.innerText.toLowerCase().includes(q)));
+        }
         function renderContent(html) {
             appArea.innerHTML = `<div class="container" id="page-container">${html}</div>`;
             setTimeout(() => document.getElementById('page-container').classList.add('visible'), 50);
@@ -230,10 +246,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
