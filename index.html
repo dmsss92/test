@@ -3,132 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <title>Institution Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --bg-color: #ffffff;
-            --surface: #fcfcfd;
-            --text-main: #111827;
+            --bg-color: #f9fafb;
+            --surface: #ffffff;
+            --text-main: #1f2937;
             --text-dim: #6b7280;
             --accent: #2563eb;
-            --border: #f3f4f6;
-            /* Ultra-smooth timing */
-            --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
-            --transition-fast: 0.2s var(--ease);
-            --transition-slow: 0.5s var(--ease);
+            --accent-hover: #1d4ed8;
+            --border: #e5e7eb;
+            --ease: cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg-color); color: var(--text-main); -webkit-font-smoothing: antialiased; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-color); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; }
 
-        /* --- Minimal Navigation --- */
+        /* --- Navigation --- */
         nav {
-            position: fixed; top: 0; width: 100%; height: 60px;
-            background: rgba(255, 255, 255, 0.8); backdrop-filter: saturate(180%) blur(20px);
+            position: sticky; top: 0; width: 100%; height: 64px;
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
             z-index: 1000; border-bottom: 1px solid var(--border);
             padding: 0 5%; display: flex; justify-content: space-between; align-items: center;
         }
-        .logo { font-weight: 500; font-size: 0.9rem; letter-spacing: 0.05em; color: var(--text-main); cursor: pointer; }
-        
-        .nav-links { display: flex; gap: 0.5rem; list-style: none; height: 100%; }
-        .nav-item { position: relative; display: flex; align-items: center; height: 100%; }
+        .logo { font-weight: 600; font-size: 1rem; color: var(--text-main); display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .logo i { color: var(--accent); }
+
+        .nav-links { display: flex; gap: 0.5rem; list-style: none; height: 100%; align-items: center; }
+        .nav-item { position: relative; height: 100%; display: flex; align-items: center; }
         
         .nav-link, .drop-btn { 
-            text-decoration: none; color: var(--text-dim); font-size: 0.85rem; 
-            padding: 6px 12px; border-radius: 4px; transition: var(--transition-fast);
+            text-decoration: none; color: var(--text-dim); font-size: 0.85rem; font-weight: 500;
+            padding: 8px 16px; border-radius: 6px; transition: 0.2s; cursor: pointer;
         }
-        .nav-link:hover, .drop-btn:hover { color: var(--text-main); background: var(--surface); }
+        .nav-link:hover, .drop-btn:hover { background: #f3f4f6; color: var(--text-main); }
         .nav-link.active { color: var(--accent); background: #eff6ff; }
 
-        /* Subtle Dropdown Animation */
+        /* Dropdown */
         .dropdown-menu {
-            display: none; position: absolute; top: 55px; left: 0;
-            background: white; min-width: 200px; border-radius: 8px;
-            border: 1px solid var(--border); padding: 6px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            opacity: 0; transform: translateY(5px);
-            animation: menuFade 0.25s var(--ease) forwards;
+            display: none; position: absolute; top: 60px; right: 0;
+            background: var(--surface); min-width: 220px; border-radius: 8px;
+            border: 1px solid var(--border); padding: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            animation: slideDown 0.2s var(--ease);
         }
-        @keyframes menuFade {
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         .dropdown-menu a {
-            padding: 8px 12px; text-decoration: none; color: var(--text-dim);
-            display: block; font-size: 0.8rem; border-radius: 4px; transition: 0.15s ease;
+            padding: 10px 12px; text-decoration: none; color: var(--text-dim);
+            display: block; font-size: 0.85rem; border-radius: 6px; transition: 0.15s;
         }
-        .dropdown-menu a:hover { background: var(--surface); color: var(--accent); }
+        .dropdown-menu a:hover { background: #f9fafb; color: var(--accent); }
         .nav-item:hover .dropdown-menu { display: block; }
 
-        /* --- Minimal Content Area --- */
-        main { margin-top: 60px; padding: 3rem 5%; }
-        .container { max-width: 1000px; margin: 0 auto; opacity: 0; transform: translateY(8px); transition: var(--transition-slow); }
-        .container.visible { opacity: 1; transform: translateY(0); }
+        /* --- Main Content --- */
+        main { flex: 1; padding: 3rem 5%; width: 100%; max-width: 1200px; margin: 0 auto; }
         
-        .hero { text-align: center; padding: 4rem 0; }
-        .hero h1 { font-size: 1.75rem; font-weight: 500; letter-spacing: -0.02em; margin-bottom: 0.5rem; }
-        .update-badge { font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; border-bottom: 1px solid var(--border); padding-bottom: 4px; margin-bottom: 2rem; display: inline-block; }
+        .hero-header { text-align: center; margin-bottom: 3rem; }
+        .hero-header h1 { font-size: 1.8rem; font-weight: 600; color: var(--text-main); margin-bottom: 0.5rem; }
+        .badge { font-size: 0.75rem; background: #dbeafe; color: #1e40af; padding: 4px 12px; border-radius: 99px; font-weight: 500; display: inline-block; margin-bottom: 1rem; }
 
-        /* --- Clean Grid & Table --- */
-        .data-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
-        .card { 
-            background: white; border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem;
-            transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+        /* --- Professional Tables --- */
+        .table-wrapper { 
+            background: var(--surface); border: 1px solid var(--border); 
+            border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
         }
-        .card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.04); }
-        .card-label { font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
-        .card-value { font-size: 0.85rem; font-weight: 400; margin-bottom: 12px; }
-
-        .table-container { background: white; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+        .table-scroll { overflow-x: auto; max-height: 70vh; }
         table { width: 100%; border-collapse: collapse; text-align: left; }
-        th { font-weight: 500; font-size: 0.75rem; color: var(--text-dim); padding: 1rem; background: var(--surface); }
-        td { padding: 1rem; font-size: 0.85rem; border-top: 1px solid var(--border); color: var(--text-main); }
         
-        .doc-link { color: var(--accent); text-decoration: none; font-weight: 500; font-size: 0.8rem; }
-        .doc-link:hover { text-decoration: underline; }
+        /* Sticky Header Logic */
+        th { 
+            background: #f8fafc; color: var(--text-dim); font-size: 0.75rem; 
+            font-weight: 600; text-transform: uppercase; padding: 1rem; letter-spacing: 0.05em;
+            position: sticky; top: 0; z-index: 10; border-bottom: 1px solid var(--border);
+        }
+        td { padding: 1rem; font-size: 0.9rem; border-bottom: 1px solid var(--border); color: var(--text-main); }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #f9fafb; }
 
-        .loader { display: none; text-align: center; padding: 5rem; font-size: 0.8rem; letter-spacing: 0.2em; color: var(--text-dim); }
+        /* --- Cards --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+        .card { 
+            background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem;
+            transition: all 0.2s; position: relative; overflow: hidden;
+        }
+        .card:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); border-color: var(--accent); }
+        .card-label { font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; margin-bottom: 4px; }
+        .card-value { font-size: 0.95rem; font-weight: 500; margin-bottom: 12px; }
+
+        /* --- Buttons & Links --- */
+        .btn-link { 
+            display: inline-flex; align-items: center; gap: 6px;
+            color: var(--accent); font-size: 0.85rem; font-weight: 500; text-decoration: none;
+            padding: 6px 12px; background: #eff6ff; border-radius: 6px; transition: 0.2s;
+        }
+        .btn-link:hover { background: var(--accent); color: white; }
+
+        /* --- Footer --- */
+        footer {
+            background: white; border-top: 1px solid var(--border);
+            padding: 2rem 5%; text-align: center; margin-top: auto;
+        }
+        .footer-text { color: var(--text-dim); font-size: 0.85rem; }
+        .footer-links { margin-top: 10px; display: flex; justify-content: center; gap: 20px; font-size: 0.85rem; }
+        .footer-links a { text-decoration: none; color: var(--text-dim); }
+        .footer-links a:hover { color: var(--accent); }
+
+        .loader { display: none; text-align: center; padding: 4rem; color: var(--text-dim); }
+        .fa-spin { margin-right: 8px; }
     </style>
 </head>
 <body>
 
     <nav>
-        <div class="logo" onclick="window.location.hash = 'home'">PORTAL</div>
+        <div class="logo" onclick="window.location.hash = 'home'">
+            <i class="fa-solid fa-building-columns"></i> INSTITUTION PORTAL
+        </div>
         <ul class="nav-links" id="main-nav"></ul>
     </nav>
 
     <main id="app">
-        <div id="loader" class="loader">LOADING...</div>
+        <div id="loader" class="loader"><i class="fa-solid fa-circle-notch fa-spin"></i> Loading Records...</div>
         <div id="content-area"></div>
     </main>
 
+    <footer>
+        <div class="footer-text">© 2024 Institution Portal. All Rights Reserved.</div>
+        <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Help Center</a>
+            <a href="#">Contact Admin</a>
+        </div>
+    </footer>
+
     <script>
+        /**
+         * ⚙️ CONFIGURATION
+         */
         const SITE_CONFIG = {
-            scriptURL: 'https://script.google.com/macros/s/AKfycbzeng1uc0VuWr4Uchz3PWF3rppUO60emCvFFdu-utobd62VMeSEpu1XYCCpUDP-11JX_Q/exec',
+            scriptURL: 'script.google.com/macros/s/AKfycbzeng1uc0VuWr4Uchz3PWF3rppUO60emCvFFdu-utobd62VMeSEpu1XYCCpUDP-11JX_Q/exec',
             pages: [
-                { id: 'home', title: 'Home', type: 'static', content: '<div class="hero"><h1>Portal Access</h1><p style="color:var(--text-dim); font-size:0.9rem;">Select a category from the navigation to begin.</p></div>' },
+                { id: 'home', title: 'Home', type: 'static', content: `
+                    <div class="hero-header">
+                        <h1>Welcome to the Portal</h1>
+                        <p style="color:var(--text-dim); max-width:600px; margin:0 auto;">
+                            Secure access to institutional documents, society members, and administrative records. 
+                            Select a category above to begin.
+                        </p>
+                        <br>
+                        <div style="display:flex; gap:10px; justify-content:center;">
+                           <div class="card" style="text-align:center; padding:20px; width:150px;">
+                                <i class="fa-regular fa-folder-open" style="font-size:24px; color:var(--accent); margin-bottom:10px;"></i>
+                                <div style="font-size:0.8rem; color:var(--text-dim)">Documents</div>
+                           </div>
+                           <div class="card" style="text-align:center; padding:20px; width:150px;">
+                                <i class="fa-solid fa-users" style="font-size:24px; color:var(--accent); margin-bottom:10px;"></i>
+                                <div style="font-size:0.8rem; color:var(--text-dim)">Members</div>
+                           </div>
+                        </div>
+                    </div>` 
+                },
                 { 
                     title: 'Documents', 
                     type: 'dropdown', 
                     links: [
-                        { id: 'society', title: 'Society', type: 'dynamic', layout: 'card', sheetId: '1wgPQaYPCncNyyJnW-fu_nygIF-ZaoKBM5FQxALI8bF8', gid: '85431680' },
-                        { id: 'master', title: 'Master', type: 'dynamic', layout: 'table', sheetId: '1wgPQaYPCncNyyJnW-fu_nygIF-ZaoKBM5FQxALI8bF8', gid: '1430286757' },
+                        { id: 'society', title: 'Society Docs', type: 'dynamic', layout: 'card', sheetId: '1wgPQaYPCncNyyJnW-fu_nygIF-ZaoKBM5FQxALI8bF8', gid: '85431680' },
+                        { id: 'master', title: 'Master List', type: 'dynamic', layout: 'table', sheetId: '1wgPQaYPCncNyyJnW-fu_nygIF-ZaoKBM5FQxALI8bF8', gid: '1430286757' },
                         { id: 'cbse', title: 'CBSE & Zone', type: 'dynamic', layout: 'card', sheetId: '1wgPQaYPCncNyyJnW-fu_nygIF-ZaoKBM5FQxALI8bF8', gid: '885792851' }
                     ]
                 },
                 {
-                    title: 'Members',
+                    title: 'Directory',
                     type: 'dropdown',
                     links: [
-                        { id: 'members-list', title: 'Society Members', type: 'dynamic', layout: 'table', sheetId: '1wrcR-9KSQl4WeiAzwBvNwDMqR4HNhOIZyZGjociO3iQ', gid: '0' }
+                        { id: 'members', title: 'Society Members', type: 'dynamic', layout: 'table', sheetId: '1wrcR-9KSQl4WeiAzwBvNwDMqR4HNhOIZyZGjociO3iQ', gid: '0' }
                     ]
                 }
             ]
         };
 
-        let currentData = [];
         const appArea = document.getElementById('content-area');
         const navBar = document.getElementById('main-nav');
         const loader = document.getElementById('loader');
@@ -144,7 +199,7 @@
                 if (item.type === 'dropdown') {
                     return `
                         <li class="nav-item">
-                            <span class="drop-btn">${item.title}</span>
+                            <span class="drop-btn">${item.title} <i class="fa-solid fa-chevron-down" style="font-size:10px; margin-left:4px;"></i></span>
                             <div class="dropdown-menu">
                                 ${item.links.map(link => `<a href="#${link.id}">${link.title}</a>`).join('')}
                             </div>
@@ -167,6 +222,7 @@
 
             appArea.innerHTML = '';
             document.querySelectorAll('.nav-link').forEach(a => a.classList.toggle('active', a.dataset.page === hash));
+            
             if (!page) return;
             page.type === 'static' ? renderContent(page.content) : fetchAndRenderData(page);
         }
@@ -175,51 +231,62 @@
             loader.style.display = 'block';
             try {
                 const response = await fetch(`${SITE_CONFIG.scriptURL}?id=${page.sheetId}&gid=${page.gid}`);
-                const result = await response.json();
-                currentData = result.rows;
-                renderUI(page, result.lastUpdated);
+                const data = await response.json();
+                renderUI(page, data.rows, data.lastUpdated);
             } catch (err) {
-                renderContent(`<div class="hero"><p style="color:red; font-size:0.8rem;">Synchronization Error</p></div>`);
+                renderContent(`<div class="hero-header"><p style="color:red">Unable to load data.</p></div>`);
             } finally {
                 loader.style.display = 'none';
             }
         }
 
-        function renderUI(page, updated) {
-            const headers = Object.keys(currentData[0]);
-            let html = `<div class="hero">
-                            <span class="update-badge">Last modified ${updated || 'recently'}</span>
-                            <h1>${page.title}</h1>
-                        </div>`;
+        function renderUI(page, rows, updated) {
+            const headers = Object.keys(rows[0]);
+            let html = `
+                <div class="hero-header">
+                    <span class="badge"><i class="fa-regular fa-clock"></i> Updated: ${updated || 'Live'}</span>
+                    <h1>${page.title}</h1>
+                </div>`;
 
             if (page.layout === 'card') {
-                html += `<div class="data-grid">`;
-                currentData.forEach(row => {
+                html += `<div class="grid">`;
+                rows.forEach(row => {
                     html += `<div class="card">`;
                     headers.forEach(h => { html += `<div class="card-label">${h}</div><div class="card-value">${formatCell(row[h])}</div>`; });
                     html += `</div>`;
                 });
                 html += `</div>`;
             } else {
-                html += `<div class="table-container"><table><thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>
-                    ${currentData.map(row => `<tr>${headers.map(h => `<td>${formatCell(row[h])}</td>`).join('')}</tr>`).join('')}
-                </tbody></table></div>`;
+                html += `<div class="table-wrapper"><div class="table-scroll"><table><thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>
+                    ${rows.map(row => `<tr>${headers.map(h => `<td>${formatCell(row[h])}</td>`).join('')}</tr>`).join('')}
+                </tbody></table></div></div>`;
             }
             renderContent(html);
         }
 
+        // ✨ SMART FORMATTING: Detects if link is PDF or Web
         function formatCell(val) {
-            if (!val) return '—';
+            if (!val) return '<span style="color:#e5e7eb">—</span>';
             const str = String(val).trim();
-            return str.startsWith('http') ? `<a href="${str}" target="_blank" class="doc-link">View</a>` : str;
+            
+            if (str.startsWith('http')) {
+                // If it looks like a PDF
+                if (str.toLowerCase().includes('pdf') || str.includes('drive.google.com')) {
+                    return `<a href="${str}" target="_blank" class="btn-link"><i class="fa-regular fa-file-pdf"></i> View PDF</a>`;
+                }
+                return `<a href="${str}" target="_blank" class="btn-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Link</a>`;
+            }
+            return str;
         }
 
         function renderContent(html) {
-            appArea.innerHTML = `<div class="container" id="page-container">${html}</div>`;
-            // Trigger the transition after a tiny delay
-            requestAnimationFrame(() => {
-                document.getElementById('page-container').classList.add('visible');
-            });
+            // Fade In Effect
+            appArea.style.opacity = '0';
+            appArea.innerHTML = html;
+            setTimeout(() => {
+                appArea.style.transition = 'opacity 0.4s ease';
+                appArea.style.opacity = '1';
+            }, 50);
         }
 
         init();
