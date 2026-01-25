@@ -3,106 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Institution Portal | Secure Access</title>
+    <title>Portal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg-color: #f8fafd;
-            --card-bg: #ffffff;
-            --text-main: #1a1c1e;
-            --text-dim: #5f6368;
-            --accent: #1a73e8;
-            --border: #dadce0;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --bg-color: #ffffff;
+            --surface: #fcfcfd;
+            --text-main: #111827;
+            --text-dim: #6b7280;
+            --accent: #2563eb;
+            --border: #f3f4f6;
+            /* Ultra-smooth timing */
+            --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+            --transition-fast: 0.2s var(--ease);
+            --transition-slow: 0.5s var(--ease);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg-color); color: var(--text-main); line-height: 1.5; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-color); color: var(--text-main); -webkit-font-smoothing: antialiased; }
 
+        /* --- Minimal Navigation --- */
         nav {
-            position: fixed; top: 0; width: 100%;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(12px);
+            position: fixed; top: 0; width: 100%; height: 60px;
+            background: rgba(255, 255, 255, 0.8); backdrop-filter: saturate(180%) blur(20px);
             z-index: 1000; border-bottom: 1px solid var(--border);
-            padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center;
+            padding: 0 5%; display: flex; justify-content: space-between; align-items: center;
         }
-        .logo { font-weight: 600; color: var(--accent); cursor: pointer; font-size: 1.1rem; }
-        .nav-links { display: flex; gap: 1.5rem; list-style: none; }
-        .nav-links a { text-decoration: none; color: var(--text-dim); font-size: 0.9rem; font-weight: 500; transition: var(--transition); }
-        .nav-links a.active { color: var(--accent); }
-
-        main { margin-top: 80px; padding: 2rem 5%; min-height: 90vh; }
-        .container { max-width: 1200px; margin: 0 auto; opacity: 0; transform: translateY(15px); transition: var(--transition); }
-        .container.visible { opacity: 1; transform: translateY(0); }
-
-        .hero { text-align: center; padding: 2rem 0; }
-        .hero h1 { font-size: 2.2rem; margin-bottom: 0.5rem; font-weight: 600; letter-spacing: -1px; }
+        .logo { font-weight: 500; font-size: 0.9rem; letter-spacing: 0.05em; color: var(--text-main); cursor: pointer; }
         
-        /* New Timestamp Style */
-        .update-badge {
-            display: inline-block;
-            background: #eef3f8;
-            color: var(--text-dim);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            margin-bottom: 1rem;
-            border: 1px solid var(--border);
+        .nav-links { display: flex; gap: 0.5rem; list-style: none; height: 100%; }
+        .nav-item { position: relative; display: flex; align-items: center; height: 100%; }
+        
+        .nav-link, .drop-btn { 
+            text-decoration: none; color: var(--text-dim); font-size: 0.85rem; 
+            padding: 6px 12px; border-radius: 4px; transition: var(--transition-fast);
         }
+        .nav-link:hover, .drop-btn:hover { color: var(--text-main); background: var(--surface); }
+        .nav-link.active { color: var(--accent); background: #eff6ff; }
 
-        .controls-row {
-            display: flex; gap: 12px; margin: 0 auto 2.5rem;
-            max-width: 900px; flex-wrap: wrap; justify-content: center;
-            align-items: center;
+        /* Subtle Dropdown Animation */
+        .dropdown-menu {
+            display: none; position: absolute; top: 55px; left: 0;
+            background: white; min-width: 200px; border-radius: 8px;
+            border: 1px solid var(--border); padding: 6px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            opacity: 0; transform: translateY(5px);
+            animation: menuFade 0.25s var(--ease) forwards;
         }
-        .search-input {
-            flex: 1; min-width: 280px; padding: 0.8rem 1.5rem; border-radius: 50px;
-            border: 1px solid var(--border); font-size: 1rem; outline: none;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+        @keyframes menuFade {
+            to { opacity: 1; transform: translateY(0); }
         }
-        .sort-container {
-            display: flex; align-items: center; background: white;
-            padding: 6px 18px; border-radius: 50px; border: 1px solid var(--border);
-            gap: 10px;
+        .dropdown-menu a {
+            padding: 8px 12px; text-decoration: none; color: var(--text-dim);
+            display: block; font-size: 0.8rem; border-radius: 4px; transition: 0.15s ease;
         }
-        .sort-select { border: none; outline: none; font-size: 0.85rem; color: var(--text-main); font-weight: 600; cursor: pointer; }
-        .sort-btn { background: none; border: none; cursor: pointer; font-size: 1.2rem; color: var(--accent); }
+        .dropdown-menu a:hover { background: var(--surface); color: var(--accent); }
+        .nav-item:hover .dropdown-menu { display: block; }
 
-        .data-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
-        .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; transition: var(--transition); }
-        .card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.08); }
-        .card-label { font-size: 0.65rem; color: var(--accent); font-weight: 600; text-transform: uppercase; margin-top: 1rem; }
-        .card-value { font-size: 0.95rem; color: var(--text-main); word-break: break-word; }
+        /* --- Minimal Content Area --- */
+        main { margin-top: 60px; padding: 3rem 5%; }
+        .container { max-width: 1000px; margin: 0 auto; opacity: 0; transform: translateY(8px); transition: var(--transition-slow); }
+        .container.visible { opacity: 1; transform: translateY(0); }
+        
+        .hero { text-align: center; padding: 4rem 0; }
+        .hero h1 { font-size: 1.75rem; font-weight: 500; letter-spacing: -0.02em; margin-bottom: 0.5rem; }
+        .update-badge { font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; border-bottom: 1px solid var(--border); padding-bottom: 4px; margin-bottom: 2rem; display: inline-block; }
 
-        .table-container { background: white; border-radius: 12px; border: 1px solid var(--border); overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; min-width: 700px; text-align: left; }
-        th { background: #f8f9fa; padding: 1rem; font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; border-bottom: 2px solid var(--border); }
-        td { padding: 1rem; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
-
-        .doc-link {
-            display: inline-block; margin-top: 10px; padding: 10px 20px;
-            background-color: #e8f0fe; color: #1a73e8; text-decoration: none;
-            border-radius: 10px; font-size: 0.85rem; font-weight: 600;
+        /* --- Clean Grid & Table --- */
+        .data-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+        .card { 
+            background: white; border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem;
+            transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
         }
-        .doc-link:hover { background-color: #1a73e8; color: white; }
+        .card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.04); }
+        .card-label { font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+        .card-value { font-size: 0.85rem; font-weight: 400; margin-bottom: 12px; }
 
-        .loader { display: none; text-align: center; padding: 5rem; color: var(--accent); font-weight: 600; }
-        .hidden { display: none !important; }
+        .table-container { background: white; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th { font-weight: 500; font-size: 0.75rem; color: var(--text-dim); padding: 1rem; background: var(--surface); }
+        td { padding: 1rem; font-size: 0.85rem; border-top: 1px solid var(--border); color: var(--text-main); }
+        
+        .doc-link { color: var(--accent); text-decoration: none; font-weight: 500; font-size: 0.8rem; }
+        .doc-link:hover { text-decoration: underline; }
+
+        .loader { display: none; text-align: center; padding: 5rem; font-size: 0.8rem; letter-spacing: 0.2em; color: var(--text-dim); }
     </style>
 </head>
 <body>
 
     <nav>
-        <div class="logo" onclick="window.location.hash = 'home'">PORTAL SYSTEM</div>
+        <div class="logo" onclick="window.location.hash = 'home'">PORTAL</div>
         <ul class="nav-links" id="main-nav"></ul>
     </nav>
 
     <main id="app">
-        <div id="loader" class="loader">FETCHING DATA...</div>
+        <div id="loader" class="loader">LOADING...</div>
         <div id="content-area"></div>
     </main>
 
@@ -110,29 +108,30 @@
         const SITE_CONFIG = {
             scriptURL: 'https://script.google.com/macros/s/AKfycbzeng1uc0VuWr4Uchz3PWF3rppUO60emCvFFdu-utobd62VMeSEpu1XYCCpUDP-11JX_Q/exec',
             pages: [
-                { id: 'home', title: 'Home', type: 'static', content: '<div class="hero"><h1>Institution Portal</h1><p>Select a category to access data.</p></div>' },
-                { id: 'master', title: 'Master', type: 'dynamic', layout: 'table', sheetId: '1wgPQaYPCncNyyJnW-fu_nygIF-ZaoKBM5FQxALI8bF8', gid: '1430286757' },
-                { id: 'society', title: 'Society', type: 'dynamic', layout: 'card', sheetId: '1wgPQaYPCncNyyJnW-fu_nygIF-ZaoKBM5FQxALI8bF8', gid: '85431680' },
-                { id: 'CBSE&ZONEdocuments', title: 'CBSE & ZONE Documents', type: 'dynamic', layout: 'card', sheetId: '1wgPQaYPCncNyyJnW-fu_nygIF-ZaoKBM5FQxALI8bF8', gid: '885792851' },
-                { id: 'smc', title: 'SMC', type: 'dynamic', layout: 'card', sheetId: '1wrcR-9KSQl4WeiAzwBvNwDMqR4HNhOIZyZGjociO3iQ', gid: '1277771410' }
+                { id: 'home', title: 'Home', type: 'static', content: '<div class="hero"><h1>Portal Access</h1><p style="color:var(--text-dim); font-size:0.9rem;">Select a category from the navigation to begin.</p></div>' },
+                { 
+                    title: 'Documents', 
+                    type: 'dropdown', 
+                    links: [
+                        { id: 'society', title: 'Society', type: 'dynamic', layout: 'card', sheetId: '1wgPQaYPCncNyyJnW-fu_nygIF-ZaoKBM5FQxALI8bF8', gid: '85431680' },
+                        { id: 'master', title: 'Master', type: 'dynamic', layout: 'table', sheetId: '1wgPQaYPCncNyyJnW-fu_nygIF-ZaoKBM5FQxALI8bF8', gid: '1430286757' },
+                        { id: 'cbse', title: 'CBSE & Zone', type: 'dynamic', layout: 'card', sheetId: '1wgPQaYPCncNyyJnW-fu_nygIF-ZaoKBM5FQxALI8bF8', gid: '885792851' }
+                    ]
+                },
+                {
+                    title: 'Members',
+                    type: 'dropdown',
+                    links: [
+                        { id: 'members-list', title: 'Society Members', type: 'dynamic', layout: 'table', sheetId: '1wrcR-9KSQl4WeiAzwBvNwDMqR4HNhOIZyZGjociO3iQ', gid: '0' }
+                    ]
+                }
             ]
         };
 
         let currentData = [];
-        let lastUpdatedStr = "";
-        let sortKey = "";
-        let ascending = true;
-
         const appArea = document.getElementById('content-area');
         const navBar = document.getElementById('main-nav');
         const loader = document.getElementById('loader');
-
-        function formatCell(val) {
-            if (!val) return '—';
-            const str = String(val).trim();
-            if (str.startsWith('http')) return `<a href="${str}" target="_blank" class="doc-link">View Document</a>`;
-            return str;
-        }
 
         function init() {
             renderNav();
@@ -141,14 +140,33 @@
         }
 
         function renderNav() {
-            navBar.innerHTML = SITE_CONFIG.pages.map(p => `<li><a href="#${p.id}" data-page="${p.id}">${p.title}</a></li>`).join('');
+            navBar.innerHTML = SITE_CONFIG.pages.map(item => {
+                if (item.type === 'dropdown') {
+                    return `
+                        <li class="nav-item">
+                            <span class="drop-btn">${item.title}</span>
+                            <div class="dropdown-menu">
+                                ${item.links.map(link => `<a href="#${link.id}">${link.title}</a>`).join('')}
+                            </div>
+                        </li>`;
+                }
+                return `<li class="nav-item"><a class="nav-link" href="#${item.id}" data-page="${item.id}">${item.title}</a></li>`;
+            }).join('');
         }
 
         async function router() {
             const hash = window.location.hash.replace('#', '') || 'home';
-            const page = SITE_CONFIG.pages.find(p => p.id === hash);
+            let page = null;
+            SITE_CONFIG.pages.forEach(p => {
+                if (p.id === hash) page = p;
+                if (p.type === 'dropdown') {
+                    const sub = p.links.find(l => l.id === hash);
+                    if (sub) page = sub;
+                }
+            });
+
             appArea.innerHTML = '';
-            document.querySelectorAll('.nav-links a').forEach(a => a.classList.toggle('active', a.dataset.page === hash));
+            document.querySelectorAll('.nav-link').forEach(a => a.classList.toggle('active', a.dataset.page === hash));
             if (!page) return;
             page.type === 'static' ? renderContent(page.content) : fetchAndRenderData(page);
         }
@@ -158,78 +176,53 @@
             try {
                 const response = await fetch(`${SITE_CONFIG.scriptURL}?id=${page.sheetId}&gid=${page.gid}`);
                 const result = await response.json();
-                
-                if (result.error) throw new Error(result.error);
-                
                 currentData = result.rows;
-                lastUpdatedStr = result.lastUpdated; // Store the timestamp
-                sortKey = Object.keys(currentData[0])[0];
-                
-                renderUI(page);
+                renderUI(page, result.lastUpdated);
             } catch (err) {
-                renderContent(`<div class="hero"><p style="color:red">Error: ${err.message}</p></div>`);
+                renderContent(`<div class="hero"><p style="color:red; font-size:0.8rem;">Synchronization Error</p></div>`);
             } finally {
                 loader.style.display = 'none';
             }
         }
 
-        function renderUI(page) {
+        function renderUI(page, updated) {
             const headers = Object.keys(currentData[0]);
-            currentData.sort((a, b) => {
-                let vA = String(a[sortKey] || '').toLowerCase();
-                let vB = String(b[sortKey] || '').toLowerCase();
-                if (vA < vB) return ascending ? -1 : 1;
-                if (vA > vB) return ascending ? 1 : -1;
-                return 0;
-            });
-
-            let html = `
-                <div class="hero">
-                    <span class="update-badge">📅 Last Modified: ${lastUpdatedStr}</span>
-                    <h1>${page.title}</h1>
-                </div>
-                <div class="controls-row">
-                    <input type="text" class="search-input" id="data-search" placeholder="Search..." onkeyup="filterData()">
-                    <div class="sort-container">
-                        <span style="font-size:0.6rem; color:var(--text-dim)">SORT:</span>
-                        <select class="sort-select" onchange="updateSort(this.value, '${page.id}')">
-                            ${headers.map(h => `<option value="${h}" ${h === sortKey ? 'selected' : ''}>${h}</option>`).join('')}
-                        </select>
-                        <button class="sort-btn" onclick="toggleDir('${page.id}')">${ascending ? '↑' : '↓'}</button>
-                    </div>
-                </div>
-            `;
+            let html = `<div class="hero">
+                            <span class="update-badge">Last modified ${updated || 'recently'}</span>
+                            <h1>${page.title}</h1>
+                        </div>`;
 
             if (page.layout === 'card') {
-                html += `<div class="data-grid" id="searchable-body">`;
+                html += `<div class="data-grid">`;
                 currentData.forEach(row => {
-                    html += `<div class="card search-item">`;
+                    html += `<div class="card">`;
                     headers.forEach(h => { html += `<div class="card-label">${h}</div><div class="card-value">${formatCell(row[h])}</div>`; });
                     html += `</div>`;
                 });
                 html += `</div>`;
             } else {
-                html += `<div class="table-container"><table><thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody id="searchable-body">
-                    ${currentData.map(row => `<tr class="search-item">${headers.map(h => `<td>${formatCell(row[h])}</td>`).join('')}</tr>`).join('')}
+                html += `<div class="table-container"><table><thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>
+                    ${currentData.map(row => `<tr>${headers.map(h => `<td>${formatCell(row[h])}</td>`).join('')}</tr>`).join('')}
                 </tbody></table></div>`;
             }
             renderContent(html);
         }
 
-        function updateSort(key, id) { sortKey = key; renderUI(SITE_CONFIG.pages.find(p => p.id === id)); }
-        function toggleDir(id) { ascending = !ascending; renderUI(SITE_CONFIG.pages.find(p => p.id === id)); }
-        function filterData() {
-            const q = document.getElementById('data-search').value.toLowerCase();
-            document.querySelectorAll('.search-item').forEach(el => el.classList.toggle('hidden', !el.innerText.toLowerCase().includes(q)));
+        function formatCell(val) {
+            if (!val) return '—';
+            const str = String(val).trim();
+            return str.startsWith('http') ? `<a href="${str}" target="_blank" class="doc-link">View</a>` : str;
         }
+
         function renderContent(html) {
             appArea.innerHTML = `<div class="container" id="page-container">${html}</div>`;
-            setTimeout(() => document.getElementById('page-container').classList.add('visible'), 50);
+            // Trigger the transition after a tiny delay
+            requestAnimationFrame(() => {
+                document.getElementById('page-container').classList.add('visible');
+            });
         }
 
         init();
     </script>
 </body>
 </html>
-
-
